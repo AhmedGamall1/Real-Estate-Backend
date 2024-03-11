@@ -1,4 +1,4 @@
-import { userModel } from "../models/user.model.js";
+import { User } from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import generateToken from "../utils/generateToken.js";
 
@@ -6,7 +6,7 @@ export const signup = async (req, res) => {
   try {
     const { username, email, password, gender } = req.body;
 
-    const user = await userModel.findOne({ email });
+    const user = await User.findOne({ email });
 
     if (user) {
       return res.status(400).json({ error: "Email already exists" });
@@ -20,9 +20,10 @@ export const signup = async (req, res) => {
     const boyAvatar = `https://avatar.iran.liara.run/public/boy?username=${username}`;
     const girlAvatar = `https://avatar.iran.liara.run/public/girl?username=${username}`;
 
-    const newUser = await userModel.create({
+    const newUser = await User.create({
       username,
       email,
+      gender,
       password: hashedPassword,
       avatar: gender === "male" ? boyAvatar : girlAvatar,
     });
@@ -34,7 +35,7 @@ export const signup = async (req, res) => {
         _id: newUser._id,
         username: newUser.username,
         fullName: newUser.fullName,
-        profilePic: newUser.profilePic,
+        avatar: newUser.avatar,
       });
     }
   } catch (error) {
@@ -47,7 +48,7 @@ export const login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    const user = await userModel.findOne({ username }).select("+password");
+    const user = await User.findOne({ username }).select("+password");
 
     if (!user) {
       return res.status(400).json({ error: "Invalid username or password" });
