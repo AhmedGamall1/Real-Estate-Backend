@@ -5,8 +5,8 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 
 // FILES IMPORT
-// import { connectToMongoDB } from "./utils/dbConnection.js";
-// import authRoutes from "./routes/auth.routes.js";
+import { connectToMongoDB } from "./utils/dbConnection.js";
+import authRoutes from "./routes/auth.routes.js";
 // import messageRoutes from "./routes/message.routes.js";
 // import userRoutes from "./routes/user.routes.js";
 
@@ -20,12 +20,12 @@ app.use(express.json());
 app.use(cookieParser());
 
 // ROUTES
-// app.use("/api/auth", authRoutes);
+app.use("/api/auth", authRoutes);
 // app.use("/api/messages", messageRoutes);
 // app.use("/api/users", userRoutes);
 
 // START SERVER
 app.listen(PORT, () => {
-  //   connectToMongoDB();
+  connectToMongoDB();
   console.log(`server is running on port: ${PORT}`);
 });
